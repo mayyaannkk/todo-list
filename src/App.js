@@ -101,9 +101,10 @@ class App extends React.Component {
    let temp = this.state.list
    temp[i].isPinned=!temp[i].isPinned
    console.log(temp[i].isPinned)
-   let tt = temp[0]
-   temp[0]=temp[i]
-   temp[i]=tt
+   let tt = temp[i]
+   temp.splice(i,1)
+   console.log(tt)
+   temp.unshift(tt)
    this.setState({
      list:temp
    })
