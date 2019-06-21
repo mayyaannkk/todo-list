@@ -23,25 +23,28 @@ class App extends React.Component {
   }
 
   whenClicked() {
-    if(this.state.change!=="")  
+    if(this.state.change!=="" )  
     {
-      let l=this.state.list;
-    let temp = {
-      val:this.state.change,
-      status: false, 
-      time: new Date().toLocaleTimeString(), 
-      date: new Date().toLocaleDateString(),
-      duedate: this.state.duedate,
-      isPinned : false
-      }
-    l.push(temp)
-    this.setState({
-      list:l, 
-      change:"",
-      total: this.state.total+1,
-      duedate: ""
-    })
-  }
+        if(this.state.duedate != ""){
+              let l=this.state.list;
+            let temp = {
+              val:this.state.change,
+              status: false, 
+              time: new Date().toLocaleTimeString(), 
+              date: new Date().toLocaleDateString(),
+              duedate: this.state.duedate,
+              isPinned : false
+              }
+            l.push(temp)
+            this.setState({
+              list:l, 
+              change:"",
+              total: this.state.total+1,
+              duedate: ""
+            })
+         }
+      else alert('Enter Duedate!!')
+    }
   }
 
   selected(i) {
@@ -84,9 +87,9 @@ class App extends React.Component {
   }
   up(i) {
     let l=this.state.list
-    if(!l[i-1].isPinned){
+    if(!(i == 0)){
         let temp=l[i]
-        if(!(i == 0)){
+        if(!l[i-1].isPinned){
           l[i]=l[i-1]
           l[i-1]=temp
         }
@@ -97,13 +100,10 @@ class App extends React.Component {
   }
 
   pin(i) {
-    // swap each and every element
    let temp = this.state.list
    temp[i].isPinned=!temp[i].isPinned
-   console.log(temp[i].isPinned)
    let tt = temp[i]
    temp.splice(i,1)
-   console.log(tt)
    temp.unshift(tt)
    this.setState({
      list:temp
@@ -115,62 +115,78 @@ class App extends React.Component {
   }
 
   // Sorting Functions
-  sortByName(e) {
-    console.log(e.target.value)
-    let temp = this.state.list
-    let arr = temp.sort(function(a, b){
-      var A=a.val.toLowerCase(), B=b.val.toLowerCase()
-      if (A < B) 
-          return -1 
-      if (A > B)
-          return 1
-      return 0 
-    })
-    this.setState({
-      list:arr
-    })
+  sortFun(e) {  
+        if (e.target.value == 'by name') {
+            let temp = this.state.list
+            let arr = temp.sort(function(a, b){
+              var A=a.val.toLowerCase(), B=b.val.toLowerCase()
+              if (A < B) 
+                  return -1 
+              if (A > B)
+                  return 1
+              return 0 
+            })
+            this.setState({
+              list:arr
+            })
+      }
+
+      if (e.target.value == 'by date') {
+          let temp = this.state.list
+          let arr = temp.sort(function(a, b){
+            var dateA=new Date(a.duedate), dateB=new Date(b.duedate)
+            return dateA-dateB
+          })
+          this.setState({
+            list: arr
+          })
+      }
+      
+      if (e.target.value == 'by completed') {
+    //Sort
+      }
   }
-  sortByDateAdded() {
-    let temp = this.state.list
-    let arr = temp.sort(function(a, b){
-      var dateA=new Date(a.date), dateB=new Date(b.date)
-      return dateA-dateB
-    })
-    this.setState({
-      list: arr
-    })
-  }
-  sortByCompleted() {
-//Sort
-  }
+
 
   render() {
+    let styles = {
+      position: 'fixed',
+     top: '0px',
+      left: '0px',
+       zIndex: '101px',
+        background: 'white',
+         margin: '0px',
+        height: '15px'
+      }
+
     return(
 
-      // Top row
+      <div>
+        <div style = {styles} className="progress col-12 margin-bottom">
+      <div  className={`bar secondary w-${((parseFloat((this.state.selected/this.state.total).toFixed(2)))*100)}`}></div>
+    </div>
+      {/* // Top row */}
       <div className="wrapper">
           <h1 className="header text-center animated heartBeat">Todo List</h1>
           <div className="row">
-              <input className="inputBox col-9 col" onChange={(e)=>{this.changeElement(e)}} value={this.state.change}/>
-              <button className="add paper-btn btn-warning col-3 col" onClick={()=>{this.whenClicked()}}>Add Item</button>
+              <input className="inputBox sm-9 md-10 col" onChange={(e)=>{this.changeElement(e)}} value={this.state.change}/>
+              <button className="add paper-btn btn-warning sm-3 md-2 col" onClick={()=>{this.whenClicked()}}>Add Item</button>
           </div>
 
         {/* Second row */}
 
           <div className="row">
-            <label className="lab col-1">Sort By: </label> 
-              <select className="lab col-2">
+            <label className="lab sm-1 col">Sort By: </label> 
+              <select onChange={(e)=>{this.sortFun(e)}} className="lab ">
                   <option >Select</option>
-                  {/* No function call applied , use different eventhandler */}
-                  <option onSelect={(e)=>{this.sortByName(e)}}>By Name</option>
-                  <option onClick={()=>{this.sortByDateAdded()}}>Date Added</option>
-                  <option onClick={()=>{this.sortByCompleted()}}>Completed</option>
-                </select>  
-                {/* add progress bar */}
-              <p className="col-5"></p>
-            <label  htmlFor="date" className="col-1">Due Date</label>
-            {/* Make date input as required and empty the date picker after insertion  */}
-            <input id="date" type="date" className="col-3"  onChange={(e)=>{this.dateChanged(e)}}></input>    
+                  <option value='by name'>By Name</option>
+                  <option value='by date'>By Date</option>
+                  <option value='by completed'>Completed</option>
+                </select>
+                <span className="md-2 sm-1 col"></span>
+            <label  htmlFor="date" className="col-fill col">Due Date</label>
+            <input id="date" type="date" className="col-fill col" onChange={(e)=>{this.dateChanged(e)}}></input> 
+            <span className="col-fill col"></span>
           </div>
                
           <p className="text-center" >Completed Items : {this.state.selected +"/"+ this.state.total}</p>
@@ -178,17 +194,18 @@ class App extends React.Component {
           {this.state.list.map((x,i)=>{
               return(
                   <div className="row animated slideInRight">
-                    <p onClick={()=>{this.selected(i)}} className={this.state.list[i].status?"alert alert-success col-6":"alert alert-secondary col-6"}>{x.val} <span className="spans">{x.date}  {x.time}</span> </p>
-                    <button className="col-1 btn-warning"  onClick={()=>{this.pin(i)}}>Pin</button>
-                    <button className="col-1  alert-secondary" disabled={x.isPinned}  onClick={()=>this.up(i)}>up</button>
-                    <button className="col-1  alert-secondary" disabled={x.isPinned} onClick={()=>this.down(i)}>down</button>
-                    <button className="col-1 animated wobble btn-danger" onClick={()=>this.deleted(i)}>x</button>
-                    <p className="col-2 alert alert-primary">Due Date : {x.duedate}</p>
+                    <p onClick={()=>{this.selected(i)}} className={this.state.list[i].status?"alert alert-success col xs-12 md-6":"alert alert-secondary col xs-12 md-6"}>{x.val} <span className="spans">{x.date}  {x.time}</span> </p>
+                    <button className="col md-1 xs-2 btn-warning"  onClick={()=>{this.pin(i)}}>Pin</button>
+                    <button className="col md-1 xs-2 alert-secondary" disabled={x.isPinned}  onClick={()=>this.up(i)}>up</button>
+                    <button className="col md-1 xs-2 alert-secondary" disabled={x.isPinned} onClick={()=>this.down(i)}>down</button>
+                    <button className="col md-1 xs-2 animated wobble btn-danger" onClick={()=>this.deleted(i)}>x</button>
+                    <p className="col md-2 alert xs-4 alert-primary">Due Date : {x.duedate}</p>
                   </div>
                 )
               }
       )
   }
+     </div>
      </div>
     )
   }
