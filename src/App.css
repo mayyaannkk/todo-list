@@ -1,20 +1,9 @@
-.styled {
-  background-color: black;
-  color: white;
-}
 
 div {
   margin-bottom: 50px;
 }
-p .text {
-  text-align: center;
-}
-
 .spans {
   float: right;
 }
 
-.lab {
-  display: inline;
-}
 

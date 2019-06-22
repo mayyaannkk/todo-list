@@ -173,22 +173,22 @@ class App extends React.Component {
     return(
 
       <div>
-        <div style = {styles} className="progress col-12 margin-bottom">
+        <div style = {styles} className="progress col-12">
       <div  className={`bar secondary w-${((parseFloat((this.state.selected/this.state.total).toFixed(2)))*100)}`}></div>
     </div>
       {/* // Top row */}
-      <div className="wrapper">
-          <h1 className="header text-center animated heartBeat">Todo List</h1>
+      <div>
+          <h1 className=" text-center animated heartBeat">Todo List</h1>
           <div className="row">
-              <input className="inputBox sm-9 md-10 col" onChange={(e)=>{this.changeElement(e)}} value={this.state.change}/>
-              <button className="add paper-btn btn-warning sm-3 md-2 col" onClick={()=>{this.whenClicked()}}>Add Item</button>
+              <input className=" sm-9 md-10 col" onChange={(e)=>{this.changeElement(e)}} value={this.state.change}/>
+              <button className="paper-btn btn-warning sm-3 md-2 col" onClick={()=>{this.whenClicked()}}>Add Item</button>
           </div>
 
         {/* Second row */}
 
           <div className="row">
-            <label htmlFor="sel" className="lab xs-2 col">Sort By: </label> 
-              <select id="sel" onChange={(e)=>{this.sortFun(e)}} className="lab ">
+            <label htmlFor="sel" className="xs-2 col">Sort By: </label> 
+              <select id="sel" onChange={(e)=>{this.sortFun(e)}} >
                   <option >Select</option>
                   <option value='by name'>By Name</option>
                   <option value='by date'>By Date</option>
