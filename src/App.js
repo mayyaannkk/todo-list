@@ -67,11 +67,21 @@ class App extends React.Component {
 
   deleted(i) {
     let l=this.state.list
-    l.splice(i,1)
-    this.setState({
-      list:l,
-      total:this.state.total-1
-    })
+    if (l[i].status == true) {
+      l.splice(i,1)
+      this.setState({
+        list:l,
+        total:this.state.total-1,
+        selected:this.state.selected-1,
+      })
+    }
+    else {
+      l.splice(i,1)
+      this.setState({
+        list:l,
+        total:this.state.total-1,
+      })
+    }
   }
 
   down(i) {
@@ -85,6 +95,7 @@ class App extends React.Component {
       list:l
     })
   }
+
   up(i) {
     let l=this.state.list
     if(!(i == 0)){
@@ -149,14 +160,14 @@ class App extends React.Component {
 
 
   render() {
-    let styles = {
-      position: 'fixed',
-     top: '0px',
-      left: '0px',
-       zIndex: '101px',
-        background: 'white',
-         margin: '0px',
-        height: '15px'
+      let styles = {
+          position: 'fixed',
+          top: '0px',
+          left: '0px',
+          zIndex: '101px',
+          background: 'white',
+          margin: '0px',
+          height: '15px'
       }
 
     return(
@@ -176,17 +187,17 @@ class App extends React.Component {
         {/* Second row */}
 
           <div className="row">
-            <label className="lab sm-1 col">Sort By: </label> 
-              <select onChange={(e)=>{this.sortFun(e)}} className="lab ">
+            <label htmlFor="sel" className="lab xs-2 col">Sort By: </label> 
+              <select id="sel" onChange={(e)=>{this.sortFun(e)}} className="lab ">
                   <option >Select</option>
                   <option value='by name'>By Name</option>
                   <option value='by date'>By Date</option>
                   <option value='by completed'>Completed</option>
-                </select>
-                <span className="md-2 sm-1 col"></span>
-            <label  htmlFor="date" className="col-fill col">Due Date</label>
-            <input id="date" type="date" className="col-fill col" onChange={(e)=>{this.dateChanged(e)}}></input> 
-            <span className="col-fill col"></span>
+              </select>
+            <span className="md-2 xs-1 col"></span>
+            <label  htmlFor="date" className="md-1 xs-2 col">Due Date</label>
+            <input id="date" type="date" className="xs-4 col" onChange={(e)=>{this.dateChanged(e)}}></input> 
+            <span className="md-1 xs-1 col"></span>
           </div>
                
           <p className="text-center" >Completed Items : {this.state.selected +"/"+ this.state.total}</p>
@@ -198,7 +209,7 @@ class App extends React.Component {
                     <button className="col md-1 xs-2 btn-warning"  onClick={()=>{this.pin(i)}}>Pin</button>
                     <button className="col md-1 xs-2 alert-secondary" disabled={x.isPinned}  onClick={()=>this.up(i)}>up</button>
                     <button className="col md-1 xs-2 alert-secondary" disabled={x.isPinned} onClick={()=>this.down(i)}>down</button>
-                    <button className="col md-1 xs-2 animated wobble btn-danger" onClick={()=>this.deleted(i)}>x</button>
+                    <button className="col md-1 xs-2 btn-danger" onClick={()=>this.deleted(i)}>x</button>
                     <p className="col md-2 alert xs-4 alert-primary">Due Date : {x.duedate}</p>
                   </div>
                 )
